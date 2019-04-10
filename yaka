@@ -44,16 +44,16 @@ function c_todo {
 }
 
 function c_fin {
-        if [ -f ${TASKS_DIR}$@ ]
+        if [ -f ${TASKS_DIR}"$@" ]
 	then
-		mv ${TASKS_DIR}$@ ${COMPLETED_DIR}$@
+		mv ${TASKS_DIR}"$@" ${COMPLETED_DIR}"$@"
 		e_success "$@ is completed"
 		todo
 		exit
 	else
-		if [ -f ${WAITING_DIR}$@ ]
+		if [ -f ${WAITING_DIR}"$@" ]
 		then
-			mv ${WAITING_DIR}$@ ${COMPLETED_DIR}$@
+			mv ${WAITING_DIR}"$@" ${COMPLETED_DIR}"$@"
 			e_success "$@ is completed"
 			todo
 			exit 
@@ -64,9 +64,9 @@ function c_fin {
 }
 
 function c_waiting {
-	if [ -f ${TASKS_DIR}$@ ]
+	if [ -f ${TASKS_DIR}"$@" ]
 	then	
-		mv ${TASKS_DIR}$@ ${WAITING_DIR}$@
+		mv ${TASKS_DIR}"$@" ${WAITING_DIR}"$@"
 		e_success "$@ is moved to waiting tasks"
 		todo
 		exit
@@ -88,7 +88,7 @@ while getopts ":hw:f:" opt; do
 	exit 1
         ;;
      w)
-        c_waiting "$OPTARG "
+        c_waiting "$OPTARG"
 	echo "w"
 	exit 1
         ;;
@@ -107,6 +107,6 @@ if [ -z "$1" ]
 then
 	todo
 else
-	touch ${TASKS_DIR}$@
+	touch ${TASKS_DIR}"${*}"
 	todo
 fi
