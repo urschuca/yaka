@@ -1,45 +1,112 @@
 #!/bin/bash
 #Yet Another tasKs mAnager 
 
-#
-#Set Colors
-#
+#set -x
+
+#shamefully copying from : https://natelandau.com/bash-scripting-utilities/
 
 bold=$(tput bold)
-underline=$(tput sgr 0 1)
 reset=$(tput sgr0)
-
-purple=$(tput setaf 171)
-red=$(tput setaf 1)
+purple=$(tput setaf 208)
 green=$(tput setaf 76)
-tan=$(tput setaf 3)
-blue=$(tput setaf 38)
-
-#
-# Headers and  Logging
-#
+red=$(tput setaf 1)
 
 e_header() { printf "\n${bold}${purple}==========  %s  ==========${reset}\n" "$@" 
-}
-e_arrow() { printf "➜ $@\n"
 }
 e_success() { printf "${green}✔ %s${reset}\n" "$@"
 }
 e_error() { printf "${red}✖ %s${reset}\n" "$@"
 }
-e_warning() { printf "${tan}➜ %s${reset}\n" "$@"
-}
-e_underline() { printf "${underline}${bold}%s${reset}\n" "$@"
-}
-e_bold() { printf "${bold}%s${reset}\n" "$@"
-}
-e_note() { printf "${underline}${bold}${blue}Note:${reset}  ${blue}%s${reset}\n" "$@"
+
+#working rewrite of https://medium.com/@sambrin/fin-command-line-todo-list-made-with-30a2346de068
+# dont use medium website for code ffs
+
+#Initialize
+TASKS_DIR=~/TODO/tasks/
+WAITING_DIR=~/TODO/waiting/
+COMPLETED_DIR=~/TODO/completed/
+
+function todo {
+	e_header "TODO"
+	find ${TASKS_DIR} -not -path '*/\.*' -type f -printf '\t ➜ %P\n'
+	e_header "Waiting"
+	find ${WAITING_DIR} -not -path '*/\.*' -type f -printf '\t ➜ %P\n'
 }
 
-e_header "I am a sample script"
-e_success "I am a success message"
-e_error "I am an error message"
-e_warning "I am a warning message"
-e_underline "I am underlined text"
-e_bold "I am bold text"
-e_note "I am a note"
+function c_todo {
+	if [ -z "$@" ]
+	then
+		todo
+	else
+		touch ${TASKS_DIR}$@
+		todo
+	fi
+}
+
+function c_fin {
+        if [ -f ${TASKS_DIR}$@ ]
+	then
+		mv ${TASKS_DIR}$@ ${COMPLETED_DIR}$@
+		e_success "$@ is completed"
+		todo
+		exit
+	else
+		if [ -f ${WAITING_DIR}$@ ]
+		then
+			mv ${WAITING_DIR}$@ ${COMPLETED_DIR}$@
+			e_success "$@ is completed"
+			todo
+			exit 
+		fi
+		e_error " Tasks $@ doesn't exist."
+		exit 1
+	fi
+}
+
+function c_waiting {
+	if [ -f ${TASKS_DIR}$@ ]
+	then	
+		mv ${TASKS_DIR}$@ ${WAITING_DIR}$@
+		e_success "$@ is moved to waiting tasks"
+		todo
+		exit
+	else
+		e_error " Tasks $@ doesn't exist."
+		exit 1
+	fi
+}
+
+function help {
+	echo "help"
+}
+
+#h: help, w: add to waiting, f: end of tasks
+while getopts ":hw:f:" opt; do
+   case $opt in
+     h)
+        help
+	exit 1
+        ;;
+     w)
+        c_waiting "$OPTARG "
+	echo "w"
+	exit 1
+        ;;
+     f)
+        c_fin "$OPTARG"
+	exit 1
+        ;;
+     *)
+	echo "YAKA requires an argument." >&2
+	exit 1
+        ;;
+   esac
+done
+
+if [ -z "$1" ]
+then
+	todo
+else
+	touch ${TASKS_DIR}$@
+	todo
+fi
