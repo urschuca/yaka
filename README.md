@@ -2,14 +2,18 @@
 
 ## Yet Another tasKs mAnager
 
-Basically a todo list in shell with waouh color features.
+Basically a todo list in shell with waouh color features. Like UNIX everything is a file.
 
 ## Usage :
 
-yaka task 	: add task to TODO list
+__yaka task__ 	: add task to TODO list
 
-yaka -w task	: move task to Waiting list
+__yaka -w task__	: move task to Waiting list
 
-yaka -f task	: finish task
+__yaka -f task__	: finish task
 
-yaka		: show TODO list
+__yaka__		: show TODO list
+
+## Cloud synchronisation
+
+Symply synchronise TODO directory into our cloud providers and let the magic happens.
