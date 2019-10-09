@@ -77,28 +77,34 @@ function c_waiting {
 }
 
 function help {
-	echo "help"
+  echo "Usage:"
+  echo " yaka [options] TASKS"
+  echo ""
+  echo " -h,      display this mesage"
+  echo " -w,      move a tasks to Waiting"
+  echo " -f,      move a tasks to Finished"
 }
 
 #h: help, w: add to waiting, f: end of tasks
 while getopts ":hw:f:" opt; do
    case $opt in
      h)
-        help
-	exit 1
+        help 
+        exit 1
         ;;
      w)
         c_waiting "$OPTARG"
-	echo "w"
-	exit 1
+        echo "w"
+	      exit 1
         ;;
      f)
         c_fin "$OPTARG"
-	exit 1
+	      exit 1
         ;;
      *)
-	echo "YAKA requires an argument." >&2
-	exit 1
+	      echo "YAKA requires an argument." >&2
+        help
+	      exit 1
         ;;
    esac
 done
