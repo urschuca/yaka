@@ -55,6 +55,7 @@ function c_fin {
 		if [ -f ${WAITING_DIR}"$@" ]
 		then
 			mv ${WAITING_DIR}"$@" ${COMPLETED_DIR}"$@"
+			touch ${COMPLETED_DIR}$@
 			e_success "$@ is completed"
 			todo
 			exit 
