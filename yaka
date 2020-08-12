@@ -48,6 +48,7 @@ function c_fin {
         if [ -f ${TASKS_DIR}"$@" ]
 	then
 		mv ${TASKS_DIR}"$@" ${COMPLETED_DIR}"$@"
+		touch ${COMPLETED_DIR}$@
 		e_success "$@ is completed"
 		todo
 		exit
