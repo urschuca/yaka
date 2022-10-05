@@ -31,7 +31,7 @@ function todo {
 	find ${TASKS_DIR} -not -path '*/\.*' -type f -printf '\t ➜ %P\n'
 	e_header "Waiting"
 	find ${WAITING_DIR} -not -path '*/\.*' -type f -printf '\t ➜ %P\n'
-  echo ""
+	echo ""
 }
 
 function c_todo {
